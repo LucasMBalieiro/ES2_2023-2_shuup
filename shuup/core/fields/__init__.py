@@ -100,6 +100,8 @@ class FormattedDecimalField(models.DecimalField):
         assert isinstance(value, decimal.Decimal)
         val = value.normalize()
         (sign, digits, exponent) = val.as_tuple()
+        if sign is 1:
+            raise ValueError("Error! Value is negative: %r." % value)
         if exponent > exponent_limit:
             raise ValueError("Error! Exponent is too large for formatting: %r." % value)
         elif exponent < -exponent_limit:
