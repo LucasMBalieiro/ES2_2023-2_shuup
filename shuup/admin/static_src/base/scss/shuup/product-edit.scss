@@ -350,7 +350,7 @@ span.is-primary-image {
         &.panel-carousel-image {
             &::before {
                 content: "\f030";
-                font-family: 'FontAwesome';
+                font-family: 'Arial';
                 display: inline-block;
                 margin-right: 0.5rem;
                 background-color: var(--secondary-opaque);
