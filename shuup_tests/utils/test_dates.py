@@ -8,7 +8,7 @@
 import pytz
 from datetime import date, datetime, time
 
-from shuup.utils.dates import parse_date, parse_datetime, to_aware, try_parse_date, try_parse_datetime, try_parse_time
+from shuup.utils.dates import local_now, parse_date, parse_datetime, to_aware, to_timestamp, try_parse_date, try_parse_datetime, try_parse_time
 
 
 def test_parse_date():
@@ -79,3 +79,23 @@ def test_dst_safe_aware():
     assert madrid.hour == 0
     assert madrid.minute == 0
     assert madrid.tzinfo._dst.seconds == 0
+
+def test_to_timestamp():
+    data1 = date(year=2018, month=10, day=7)
+    data2 = date(year=2007, month=5, day=23)
+    data3 = datetime(year=2024, month=2, day=8, hour=23, minute=56)
+    data4 = datetime(year=2023, month=9, day=7, hour=17, minute=22)
+    assert to_timestamp(data1) == time.mktime(data1.timetuple())
+    assert to_timestamp(data2) == time.mktime(data2.timetuple())
+    assert to_timestamp(data3) == time.mktime(data3.timetuple())
+    assert to_timestamp(data4) == time.mktime(data4.timetuple())
+
+def test_local_now():
+    tz1 = pytz.timezone("America/Sao_Paulo")
+    tz2 = pytz.timezone('Asia/Tokyo')
+    tz3 = pytz.timezone('Europe/Paris')
+    tz4 = pytz.timezone('Australia/Sydney')
+    assert local_now(tz1) == datetime.now(tz1)
+    assert local_now(tz2) == datetime.now(tz2)
+    assert local_now(tz3) == datetime.now(tz3)
+    assert local_now(tz4) == datetime.now(tz4)

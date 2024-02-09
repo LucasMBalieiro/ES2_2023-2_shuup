@@ -12,7 +12,7 @@ import pytest
 import six
 from decimal import Decimal
 
-from shuup.utils.numbers import parse_decimal_string, parse_simple_decimal
+from shuup.utils.numbers import nickel_round, parse_decimal_string, parse_simple_decimal
 
 
 @pytest.mark.parametrize(
@@ -105,3 +105,13 @@ def test_parse_decimal_string_with_dirty_input():
 def test_parse_decimal_string_with_unaccepted_input(value):
     with pytest.raises(decimal.InvalidOperation):
         parse_decimal_string(value)
+
+def test_nickel_round():
+    assert nickel_round(Decimal('19.249')) == Decimal('19.25')
+    assert nickel_round(Decimal('25.32')) == Decimal('25.30')
+    assert nickel_round(Decimal('-75.21')) == Decimal('-75.20')
+    assert nickel_round(Decimal('-62.88')) == Decimal('-62.90')
+    assert nickel_round(Decimal('39.73'), Decimal('0.1')) == Decimal('39.7')
+    assert nickel_round(Decimal('55.86'), Decimal('0.1')) == Decimal('55.9')
+    assert nickel_round(Decimal('12.3459892'), Decimal('0.25')) == Decimal('12.25')
+    assert nickel_round(Decimal('88.63'), Decimal('0.25')) == Decimal('88.75')
